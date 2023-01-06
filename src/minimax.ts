@@ -17,14 +17,12 @@ const switchPlayer = (player: string) => {
   return player === 'X' ? 'O' : 'X';
 };
 
-const exploredBoardStates = new Map(); // Allows already explored states to be memoized
-
-// Recursively build the tree through a depth first search
+// Recursively build a tree graph through a depth first search of the tic tac toe gamespace
 const buildTree = async (node: TreeNode, player: 'X' | 'O') => {
   const MAX_SCORE = 10;
   const MIN_SCORE = -10;
 
-  // Check if in terminal state and assign score accordingly
+  // Check if in terminal state and assign the score accordingly
   if (hasPlayerWon(node.state, switchPlayer(player))) {
     node.score = switchPlayer(player) === 'X' ? MAX_SCORE : MIN_SCORE;
     return;
@@ -42,28 +40,16 @@ const buildTree = async (node: TreeNode, player: 'X' | 'O') => {
         const childState = cloneState(node.state);
         childState[i][j] = player;
 
-        // If state was already encountered then assign the corresponding node as a child and continue
-        const proposedState = JSON.stringify({
-          childState,
-          player: switchPlayer(player)
-        });
-        if (exploredBoardStates.has(proposedState)) {
-          children.push(exploredBoardStates.get(proposedState));
-          continue;
-        } else {
-          const child: TreeNode = {
-            state: childState,
-            score: null,
-            children: []
-          };
-          exploredBoardStates.set(proposedState, child);
-          children.push(child);
-          buildTree(child, switchPlayer(player)); // Recursively call this function until a terminal node is reached
-        }
+        const child: TreeNode = {
+          state: childState,
+          score: null,
+          children: []
+        };
+        children.push(child);
+        buildTree(child, switchPlayer(player)); // Recursively call this function until a terminal node is reached
       }
     }
   }
-
 
   node.children = children;
   if (player === 'X') {
@@ -99,7 +85,7 @@ let root: TreeNode = {
   state: createInitialGameState(3),
   score: null,
   children: [],
-  isRoot: true,
+  isRoot: true
 };
-buildTree(root, "X");
-writeTree(root, "minimax-gridsize-3.json");
+buildTree(root, 'X');
+writeTree(root, 'minimax-gridsize-3.json');
