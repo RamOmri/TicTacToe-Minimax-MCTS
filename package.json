@@ -1,12 +1,14 @@
 {
   "scripts": {
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "build-tree": "ts-node ./src/minimax.ts"
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "build-tree": "ts-node ./src/BuildMinimaxTreeGraph.ts"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
     "prettier": "^2.8.1",
     "typescript": "^4.9.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
 }

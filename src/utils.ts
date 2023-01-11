@@ -1,58 +1,38 @@
-export type GameStateType = ('' | 'X' | 'O')[][];
+import { GameState, Player } from './types';
 
-export type TreeNode = {
-  state: GameStateType;
-  score: number | null;
-  children: TreeNode[];
-  move?: {
-    i: number;
-    j: number;
-  };
-  isRoot?: boolean;
+// Returns the opposite player to the one provided.
+export const switchPlayers = (player: Player) => {
+  return player === 'X' ? 'O' : 'X';
 };
 
-export const createInitialGameState = (gridSize: number) => {
+// Returny a deepy copy of the game state.
+export const cloneState = (state: GameState) => {
+  return state.map((row) => [...row]);
+};
+
+// Return an initial gamestate
+export function createInitialGameState(gridSize: number) {
   const gameState = [...Array(gridSize)].map((e) => Array(gridSize));
-  return gameState.map((row) => row.fill('', 0, gridSize));
-};
-
-export function hasPlayerWon(gameState: GameStateType, player: 'X' | 'O') {
-  // Check for a row win
-  if (gameState.some((row) => row.every((cell) => cell === player))) {
-    return true;
-  }
-
-  // check for a column win
-  for (let col = 0; col < gameState.length; col++) {
-    let isColumnFull = true;
-    for (let row = 0; row < gameState.length; row++) {
-      if (gameState[row][col] !== player) {
-        isColumnFull = false;
-        break;
-      }
-    }
-    if (isColumnFull) return true;
-  }
-
-  // Check for a win by player on a diagonal
-  let diagonal1Filled = true;
-  let diagonal2Filled = true;
-  for (let i = 0; i < gameState.length; i++) {
-    if (gameState[i][i] !== player) {
-      diagonal1Filled = false;
-    }
-    if (gameState[i][gameState.length - 1 - i] !== player) {
-      diagonal2Filled = false;
-    }
-  }
-  if (diagonal1Filled || diagonal2Filled) {
-    return true;
-  }
-  return false;
+  return gameState.map((row) => row.fill('', 0, gridSize)) as GameState;
 }
 
-export function isTie(gameState: GameStateType) {
-  return gameState.every((row) =>
-    row.every((cell) => cell === 'X' || cell === 'O')
-  );
+// Given a row column and player apply the move on the game state and return.
+export function applyMove(state, move, player) {
+  const [i, j] = move;
+  state[i][j] = player;
+  return state;
+}
+
+// Returns the row and column of all empty cells.
+export function getAvailableMoves(state: GameState): [number, number][] {
+  const moves: [number, number][] = [];
+  for (let i = 0; i < state.length; i++) {
+    for (let j = 0; j < state.length; j++) {
+      if (state[i][j] === '') {
+        moves.push([i, j]);
+      }
+    }
+  }
+
+  return moves;
 }
