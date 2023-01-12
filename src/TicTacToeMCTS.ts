@@ -116,8 +116,8 @@ function calculateUCB1(node) {
 
 // Given whether the agent won or lost, return some predefined score. Currently biasing the agent against losing
 function getGameScore(hasWon: boolean, hasLost: boolean) {
-  if (hasWon) return 10;
-  if (hasLost) return -100;
+  if (hasWon) return 1;
+  if (hasLost) return -10;
   return 0;
 }
 

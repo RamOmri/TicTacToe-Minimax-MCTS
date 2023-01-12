@@ -6,6 +6,7 @@ import {
   applyMove,
   switchPlayers
 } from './utils';
+import { shuffle } from "lodash";
 
 // Given an initial state, play a random game of tic tac toe until an end state is reached
 export default function SimulateRandomGame(
@@ -13,17 +14,16 @@ export default function SimulateRandomGame(
   startingPlayer: Player
 ) {
   let player = startingPlayer;
-  let moves = getAvailableMoves(state);
+  let moves = shuffle(getAvailableMoves(state));
   let simulatedState = cloneState(state); // Initial state of the game to simulate
+  let isGameOver = moves.length === 0 || hasPlayerWon(simulatedState, player);
 
-  let isGameOver = moves.length > 0 && !hasPlayerWon(simulatedState, player);
   // While the game is not over
   while (!isGameOver) {
-    const move = moves[Math.floor(Math.random() * moves.length)]; // Select a random move
+    const move = moves.pop(); // Select a random move
     simulatedState = applyMove(simulatedState, move, player); // Apply the move on the current game state
-    player = switchPlayers(player); // switch players
-    moves = getAvailableMoves(simulatedState); // Retrieve all the possible moves after applying the randomly selected move
-    isGameOver = moves.length > 0 && !hasPlayerWon(simulatedState, player);
+    isGameOver = moves.length === 0 || hasPlayerWon(simulatedState, player);
+    player = switchPlayers(player);
   }
   return simulatedState;
 }
