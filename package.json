@@ -1,7 +1,9 @@
 {
   "scripts": {
     "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "build-tree": "ts-node ./src/BuildMinimaxTreeGraph.ts"
+    "build-tree": "ts-node ./src/BuildMinimaxTreeGraph.ts",
+    "compile": "yarn tsc",
+    "deploy:mcts": "source .env && $DEPLOY_COMMAND"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
@@ -9,6 +11,8 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@google-cloud/functions": "^2.2.3",
+    "@google-cloud/functions-framework": "^3.1.3",
     "lodash": "^4.17.21"
   }
 }
